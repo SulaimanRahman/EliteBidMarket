@@ -37,7 +37,7 @@ const Sell = () => {
 
       {/* right Section */}
       <div className="font-bold flex w-full h-full text-center flex-col text-subtitle">Post an Auction
-        <center><img src={post_auction_image} className="App-logo w-image object-center" alt="logo"/></center>
+        <center><img src={post_auction_image} className="App-logo w-image object-center" alt="logo" /></center>
         <div className="w-[660px] font-semibold text-right rtl:text-left">
           <span className="text-black">Unleash Your Items' Potential</span><br></br>
             <span className="text-white">Begin Your Auction Journey!</span>
