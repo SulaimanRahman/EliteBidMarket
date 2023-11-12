@@ -47,6 +47,8 @@ module.exports = {
         mobilemenu: "20px",
         mobilemenutitle: "30px",
 
+        //sell page
+        selltext: "clamp(1.0rem, 2vw, 2.5rem)",
 
       },
       padding: {
@@ -65,7 +67,10 @@ module.exports = {
         menu: "clamp(25px, 8vw, 40px)",
         searchmobile: "clamp(200px, 100%, 900px)",
         filter: "clamp(125px, 100%, 200px)",
-        
+
+        //sell page styling
+        sellimage: "clamp(250px, 100%, 550px)",
+        selltextwidth: "clamp(250px, 100%, 700px)",
         
       },
       minWidth: {
