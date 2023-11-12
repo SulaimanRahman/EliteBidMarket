@@ -22,7 +22,7 @@ const Listing = (props: ItemProps) => {
         <img
           src={props.image}
           alt="car image"
-          className=" rounded-t-lg object-cover"
+          className=" rounded-t-lg object-cover min-h-[250px]"
         />
       </div>
 
