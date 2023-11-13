@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-primary flex md:justify-between fixed w-full ">
+    <div className="bg-primary flex md:justify-between fixed w-full">
       {/* left side */}
       <div className="flex items-center w-full md:pt-0 py-2">
         {/* Title */}

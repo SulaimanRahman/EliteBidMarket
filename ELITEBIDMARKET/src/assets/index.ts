@@ -15,6 +15,7 @@ import account_icon from './account_icon.png'
 import filter_icon from './filter_icon.png'
 import sign_in_image from './sign_in_image.png'
 import sign_up_image from './sign_up_image.png'
+import post_auction_image from './post_auction_image.png'
 
 export {
     three_stars_icon,
@@ -33,5 +34,6 @@ export {
     account_icon,
     filter_icon,
     sign_in_image,
-    sign_up_image
+    sign_up_image,
+    post_auction_image
 }
