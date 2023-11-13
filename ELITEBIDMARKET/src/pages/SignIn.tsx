@@ -18,7 +18,7 @@ const SignIn = () => {
       <div className="my-30 bg-white font-bold flex p-10 rounded-lg flex-col w-full h-full flex-col text-center">
         <h1>Sign in</h1>
         <br></br>
-        <form method="post">
+        <form method="POST">
           <input
             type="email"
             className="md:w-search w-searchmobile py-2 focus:border-none focus:outline-none font-normal border-b-2 border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
@@ -31,7 +31,7 @@ const SignIn = () => {
             placeholder="Password" />
           <br></br>
           <br></br>
-          <button className="bg-primary rounded-lg px-5 py-2 w-full h-full">
+          <button className="bg-primary rounded-lg px-5 py-2 w-[450px]">
             Sign In
           </button>
         </form>
