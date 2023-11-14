@@ -4,10 +4,10 @@ import { Link } from "react-router-dom"
 
 const SignIn = () => {
   return (
-    <div className='bg-primary flex justify-around p-10 text-subtext'>
+    <div className='bg-primary flex flex-col md:flex-row justify-around p-10 text-subtext'>
       {/* Left section for image */}
-      <div className='my-30 font-bold flex w-full h-full text-center flex-col text-subtitle'>
-        <div className='w-[650px] font-bold text-center rtl:text-left'>
+      <div className='my-30 font-bold flex flex-col w-full h-full text-center flex-col text-subtitle'>
+        <div className='w-full font-bold text-center rtl:text-left'>
           <span className='text-black'>Welcome Back! Instant Access to</span>
           <br></br>
           <span className='text-white'>Exciting Auctions</span>
@@ -40,7 +40,7 @@ const SignIn = () => {
           />
           <br></br>
           <br></br>
-          <button className='bg-primary rounded-lg px-5 py-2 w-[450px]'>
+          <button className='bg-primary rounded-lg px-5 py-2 w-full'>
             Sign In
           </button>
         </form>
