@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   hero_section,
   trending_auctions,
@@ -16,20 +16,95 @@ import {
 import { lamborghini, contact_us_icon } from "../assets";
 import "./home.css";
 
+interface Car {
+  id: number;
+  name: string;
+  features: string;
+  description: string;
+  posted_by: string;
+  imageURL: string;
+  endTime: string;
+  username: string;
+  num_of_bids: string;
+  last_bidder_name: string;
+  last_bidding_amount: string;
+  minBidPrice: string;
+}
+
 const Home = () => {
-  const showTrendingAuction = () => {
-    const divs: React.ReactElement[] = [];
+  const [trendingCars, setTrendingCars] = useState<Car[]>([]);
+  const [recentlySoldCars, setRecentlySoldCars] = useState<Car[]>([]);
 
-    for (const item of trending_auctions) {
-      console.log("{Title: " + item.title + "} {Seller: " + item.seller + "}");
-    }
+  useEffect(() => {
+    const ALL_CARS = import.meta.env.VITE_ALL_CARS;
+    fetch(ALL_CARS)
+      .then((response) => response.json())
+      .then((cars) => {
+        console.log("API was called");
+        //separate sold item max 10
+        const soldcars: Car[] = [];
+        cars.map((car: Car) => {
+          if (isCarSold(car.endTime) == true) {
+            soldcars.push(car);
+          }
+        });
+        setRecentlySoldCars(soldcars.slice(0, 10));
 
-    return (
-      <React.Fragment>
-        <div>{divs}</div>
-      </React.Fragment>
-    );
+        //separate trending list max 10
+
+        //removing sold cars
+        const updatedAllCars = cars.filter(
+          (car: Car) => !soldcars.some((soldCar) => soldCar.id === car.id)
+        );
+
+        const sortedCars = updatedAllCars.sort((a: Car, b: Car) => {
+          const bidsA = parseInt(a.num_of_bids);
+          const bidsB = parseInt(b.num_of_bids);
+
+          return bidsB - bidsA;
+        });
+
+        const topTenCars = sortedCars.slice(0, 10);
+        setTrendingCars(topTenCars);
+      });
+  }, []);
+
+  const isCarSold = (dateString: string): boolean => {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    return date.getTime() < now.getTime();
   };
+
+  // useEffect(() => {
+  //   console.log("api called");
+
+  //   // //separate sold item max 10
+  //   // const soldcars: Car[] = [];
+  //   // cars.map((car) => {
+  //   //   if (isCarSold(car.endTime) == true) {
+  //   //     soldcars.push(car);
+  //   //   }
+  //   // });
+  //   // setRecentlySoldCars(soldcars.slice(0, 10));
+
+  //   // //separate trending list max 10
+
+  //   // //removing sold cars
+  //   // const updatedAllCars = cars.filter(
+  //   //   (car) => !soldcars.some((soldCar) => soldCar.id === car.id)
+  //   // );
+
+  //   // const sortedCars = updatedAllCars.sort((a, b) => {
+  //   //   const bidsA = parseInt(a.num_of_bids);
+  //   //   const bidsB = parseInt(b.num_of_bids);
+
+  //   //   return bidsB - bidsA;
+  //   // });
+
+  //   // const topTenCars = sortedCars.slice(0, 10);
+  //   // setTrendingCars(topTenCars);
+  // }, []);
 
   return (
     <div className="flex flex-col">
@@ -82,106 +157,21 @@ const Home = () => {
           Trending Auctions
         </div>
         <div className="flex overflow-x-scroll md:gap-10 gap-5">
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image="https://www.chicagoautoshow.com/assets/1/23/VehicleRegularDimensionId/2022-Acura-NSX-11.jpg"
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image="https://media.ed.edmunds-media.com/land-rover/range-rover-sport/2021/oem/2021_land-rover_range-rover-sport_4dr-suv_svr-carbon-edition_fq_oem_1_815.jpg"
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image="https://news.dupontregistry.com/wp-content/uploads/2023/07/2023-aston-martin-dbs-superleggera-scaled.jpg"
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTxMJTtVExsNb7fJ1q4UGWo7rOh9ntQ0jQS_7frJURhKbwLKvRf"
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-5TPVNyLUVJC-ZWGZ0aiTLDuDLH7H9J1vo8A2g7h-vNk9b-d2"
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <Listing
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
+          {trendingCars.map((car) => (
+            <div
+              key={car.id}
+              className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+            >
+              <Listing
+                image={car.imageURL}
+                auctioneerName={car.posted_by}
+                verified={false}
+                title={car.name}
+                currentBid={car.last_bidding_amount}
+                endTime={car.endTime}
+              />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -190,97 +180,22 @@ const Home = () => {
         <div className="text-subtitle font-bold text-center py-vertical">
           Recently Sold
         </div>
-        <div className="flex overflow-x-scroll md:gap-10 gap-5">
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
-          <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
-            <ListingSold
-              image={lamborghini}
-              auctioneerName="Thomas Jerry"
-              verified={false}
-              title="2016 Lamborghini Huracán"
-              currentBid="$1.9 million"
-              endTime="01:29:35"
-            />
-          </div>
+        <div className="flex overflow-x-scroll scroll-smooth md:gap-10 gap-5">
+          {recentlySoldCars.map((car) => (
+            <div
+              key={car.id}
+              className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+            >
+              <ListingSold
+                image={car.imageURL}
+                auctioneerName={car.posted_by}
+                verified={false}
+                title={car.name}
+                currentBid={car.last_bidding_amount}
+                endTime={car.endTime}
+              />
+            </div>
+          ))}
         </div>
       </div>
 

@@ -26,6 +26,9 @@ const Sell = () => {
           <InputText placeholder="End Date and TIme" />
         </div>
         <div className="text-white font-normal w-full mt-5">
+          <InputText placeholder="Image URL" />
+        </div>
+        <div className="text-white font-normal w-full mt-5">
           <MessageInput placeholder="Item Features" rows={3} />
         </div>
         <div className="text-white font-normal w-full mt-5">
