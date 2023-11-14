@@ -1,13 +1,12 @@
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: #222128;
+}
 
-  ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-    background: #222128;
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    background: #269c9c;
-    margin-left: 2px;
-    margin-right: 2px;
-  }
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #269c9c;
+  margin-left: 2px;
+  margin-right: 2px;
+}

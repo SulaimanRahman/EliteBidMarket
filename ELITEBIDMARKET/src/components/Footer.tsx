@@ -1,18 +1,18 @@
-import React from 'react'
-import {facebook_icon, instagram_icon, twitter_icon} from '../assets'
+import React from "react"
+import { facebook_icon, instagram_icon, twitter_icon } from "../assets"
 
 const Footer = () => {
   return (
     <div className='bg-secondary text-white flex flex-col py-10 items-center'>
       <div className='flex justify-center md:gap-10 gap-5'>
         <div className='max-w-socialmedia cursor-pointer'>
-          <img src={facebook_icon} alt="Facebook" className='object-contain'/>
+          <img src={facebook_icon} alt='Facebook' className='object-contain' />
         </div>
         <div className='max-w-socialmedia cursor-pointer'>
-          <img src={instagram_icon} alt="Facebook" className='object-contain'/>
+          <img src={instagram_icon} alt='Facebook' className='object-contain' />
         </div>
         <div className='max-w-socialmedia cursor-pointer'>
-          <img src={twitter_icon} alt="Facebook" className='object-contain'/>
+          <img src={twitter_icon} alt='Facebook' className='object-contain' />
         </div>
       </div>
       <div className='md:mt-10 mt-5 font-semibold text-footertext'>

@@ -1,27 +1,27 @@
-import * as React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import * as React from "react"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import FormControl from "@mui/material/FormControl"
+import Select, { SelectChangeEvent } from "@mui/material/Select"
 
 export default function Filter() {
-  const [sort, setSort] = React.useState("");
+  const [sort, setSort] = React.useState("")
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSort(event.target.value);
-  };
+    setSort(event.target.value)
+  }
 
   return (
-    <FormControl sx={{ m: 1 }} size="small" className="w-filter">
-      <InputLabel id="demo-select-small-label">Sort by</InputLabel>
+    <FormControl sx={{ m: 1 }} size='small' className='w-filter'>
+      <InputLabel id='demo-select-small-label'>Sort by</InputLabel>
       <Select
-        labelId="demo-select-small-label"
-        id="demo-select-small"
+        labelId='demo-select-small-label'
+        id='demo-select-small'
         value={sort}
-        label="Age"
+        label='Age'
         onChange={handleChange}
       >
-        <MenuItem value="">
+        <MenuItem value=''>
           <em>None</em>
         </MenuItem>
         <MenuItem value={"A-Z"}>Alphabetical (A - Z)</MenuItem>
@@ -30,5 +30,5 @@ export default function Filter() {
         <MenuItem value={"HighestPrice"}>Highest Price</MenuItem>
       </Select>
     </FormControl>
-  );
+  )
 }
