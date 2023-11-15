@@ -13,6 +13,9 @@ module.exports = {
         dimBlue: "rgba(9, 151, 124, 0.1)",
         gray: "#515151",
         placeholder: "rgba(0, 0, 0, 0.2)",
+        red: "#FF0000",
+        lightred: "#f7454a",
+        gray: "#515151"
         
       },
       fontFamily: {
@@ -50,6 +53,10 @@ module.exports = {
         //sell page
         selltext: "clamp(1.0rem, 2vw, 2.5rem)",
 
+        medium: "clamp(1.0rem, 5vw, 1.5rem)",
+        large: "clamp(1.0rem, 5vw, 2.0rem)",
+
+
       },
       padding: {
         vertical: "clamp(20px, 2vw, 30px)",
@@ -72,6 +79,15 @@ module.exports = {
         sellimage: "clamp(250px, 100%, 550px)",
         selltextwidth: "clamp(250px, 100%, 700px)",
         
+        //detail page
+        detailInputText: "clamp(200px, 20vw, 400px)",
+        deleteButton: "clamp(200px, 100%, 300px)",
+        
+        //SignIn Page
+        signInInputText: "clamp(200px, 100%, 550px)",
+        signInPad: "clamp(200px, 100%, 600px)",
+        
+        
       },
       minWidth: {
         listing: "clamp(16rem, 20rem, 25rem)",
@@ -83,7 +99,7 @@ module.exports = {
         listing: "clamp(16rem, 20rem, 25rem)",
         listinglg: "22rem",
         listingmd: "24rem",
-        listingxs: "33rem"
+        listingxs: "33rem",
       },
       maxWidth: {
         listing: "clamp(16rem, 20rem, 25rem)",
@@ -103,6 +119,7 @@ module.exports = {
       },
       height: {
         listing: "clamp(348px, 380px, 520px)",
+
       },
       boxShadow:{
         custom: '0 0 10px rgba(255, 255, 255, 0.3)'
