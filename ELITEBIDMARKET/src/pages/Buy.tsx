@@ -26,6 +26,7 @@ const Buy = () => {
       .then((response) => response.json())
       .then((cars) => {
         console.log("api called");
+        console.log(cars);
         //separate sold item max 10
         const soldcars: Car[] = [];
         cars.map((car: Car) => {
@@ -68,6 +69,7 @@ const Buy = () => {
             className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
           >
             <Listing
+              id={car.id}
               image={car.imageURL}
               auctioneerName={car.posted_by}
               verified={false}

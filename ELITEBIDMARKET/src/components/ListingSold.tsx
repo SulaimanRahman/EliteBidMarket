@@ -1,8 +1,10 @@
 import React from "react";
 import { lamborghini, verified_icon } from "../assets";
 import { formatNumber } from "../Helper";
+import { Link } from "react-router-dom";
 
 interface ItemProps {
+  id: Number;
   image: string;
   auctioneerName: string;
   verified: boolean;
@@ -28,7 +30,10 @@ const ListingSold = (props: ItemProps) => {
   };
 
   return (
-    <div className="flex flex-col bg-white rounded-lg hover:border-yellow-500 hover:border-[0.5px] border-[0.5px] shadow-custom cursor-pointer">
+    <Link
+      to={`/ListingDetails/${props.id}`}
+      className="flex flex-col bg-white rounded-lg hover:border-yellow-500 hover:border-[0.5px] border-[0.5px] shadow-custom cursor-pointer"
+    >
       {/* Car Image */}
       <div className="flex  min-h-[250px] max-h-[250px]">
         <img
@@ -79,7 +84,7 @@ const ListingSold = (props: ItemProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

@@ -4,7 +4,7 @@ import { post_auction_image } from "../assets";
 const Sell = () => {
   // @ts-ignore
   return (
-    <div className="bg-primary w-full h-[100vh] flex justify-between">
+    <div className="bg-primary w-full min-h-[100vh] flex justify-between">
       {/* Left Section */}
       <div className="flex flex-col w-full h-full text-selltext lg:p-20 p-10">
         <div className="font-bold text-selltext mb-5 md:hidden flex justify-center">

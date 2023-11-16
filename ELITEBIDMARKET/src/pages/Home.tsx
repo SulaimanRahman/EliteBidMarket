@@ -163,6 +163,7 @@ const Home = () => {
               className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
             >
               <Listing
+                id={car.id}
                 image={car.imageURL}
                 auctioneerName={car.posted_by}
                 verified={false}
@@ -187,6 +188,7 @@ const Home = () => {
               className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
             >
               <ListingSold
+                id={car.id}
                 image={car.imageURL}
                 auctioneerName={car.posted_by}
                 verified={false}
