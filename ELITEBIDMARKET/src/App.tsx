@@ -12,6 +12,8 @@ import {
 import { Navbar } from "./components";
 import { Route, Routes } from "react-router-dom";
 
+// export const SignInContext = React.createContext("SingInContextthis is insdie");
+
 const App = () => {
   return (
     <div>

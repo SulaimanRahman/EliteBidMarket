@@ -1,8 +1,43 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { sign_in_image } from "../assets";
 import { Link } from "react-router-dom";
+import { signInUser } from "../Helper";
+
+interface SignInDataInterface {
+  success: Boolean;
+  access_token: string;
+  email: string;
+  name: string;
+}
 
 const SignIn = () => {
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (localStorage.getItem("user-token")) {
+      console.log("User is logged in");
+      console.log(localStorage.getItem("user-token"));
+    }
+  }, []);
+
+  const handleSignIn = () => {
+    if (email.current !== null && password.current !== null) {
+      const userData = {
+        username: email.current.value,
+        password: password.current.value,
+      };
+
+      try {
+        const responseData = signInUser(userData);
+      } catch (error) {
+        console.error("Sign-in failed:", error);
+      }
+    } else {
+      console.log("Please enter email and password");
+    }
+  };
+
   return (
     <div className="bg-primary flex flex-col md:flex-row justify-around md:p-10 p-5 text-large md:h-[100vh]">
       {/* Left section for image */}
@@ -28,6 +63,7 @@ const SignIn = () => {
           <br></br>
           <form method="POST" className="md:mx-10 mx-7">
             <input
+              ref={email}
               type="email"
               className="w-full py-2 focus:outline-none font-normal border-b-2 border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 align-text-top"
               placeholder="Email"
@@ -35,13 +71,18 @@ const SignIn = () => {
             <br></br>
             <br></br>
             <input
+              ref={password}
               type="password"
               className="w-full py-2 focus:outline-none font-normal border-b-2 border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 align-text-top"
               placeholder="Password"
             />
             <br></br>
             <br></br>
-            <button className="bg-primary rounded-lg py-2 w-full">
+            <button
+              type="button"
+              className="bg-primary rounded-lg py-2 w-full"
+              onClick={handleSignIn}
+            >
               Sign In
             </button>
           </form>

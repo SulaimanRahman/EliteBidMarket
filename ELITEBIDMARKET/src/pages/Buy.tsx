@@ -26,6 +26,7 @@ const Buy = () => {
       .then((response) => response.json())
       .then((cars) => {
         console.log("api called");
+        console.log(cars);
         //separate sold item max 10
         const soldcars: Car[] = [];
         cars.map((car: Car) => {
