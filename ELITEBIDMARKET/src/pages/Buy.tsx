@@ -71,10 +71,10 @@ const Buy = () => {
 
     switch (sortOption) {
       case "A-Z":
-        sortedCars.sort((a, b) => a.name.trim().localeCompare(b.name.trim()));
+        sortedCars.sort((a, b) => a.name.toLocaleUpperCase().localeCompare(b.name.toLocaleUpperCase()));
         break;
       case "Z-A":
-        sortedCars.sort((a, b) => b.name.trim().localeCompare(a.name.trim()));
+        sortedCars.sort((a, b) => b.name.toLocaleUpperCase().localeCompare(a.name.toLocaleUpperCase()));
         break;
       case "LowestPrice":
         sortedCars.sort((a, b) => parseFloat(a.last_bidding_amount) - parseFloat(b.last_bidding_amount));
@@ -126,3 +126,4 @@ const Buy = () => {
 };
 
 export default Buy;
+
