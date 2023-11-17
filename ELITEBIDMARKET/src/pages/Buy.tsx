@@ -71,10 +71,7 @@ const Buy = () => {
 
     switch (sortOption) {
       case "A-Z":
-    sortedCars.sort((a, b) => {
-      const comparison = a.name[0].localeCompare(b.name[0]);
-      return comparison !== 0 ? comparison : a.name.localeCompare(b.name);
-    });
+    sortedCars.sort((a, b) => a.name[0].localeCompare(b.name[0]));
     break;
   case "Z-A":
     sortedCars.sort((a, b) => {
