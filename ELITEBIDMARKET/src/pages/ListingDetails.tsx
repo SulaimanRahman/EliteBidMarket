@@ -1,5 +1,5 @@
-import React from "react";
-import { Listing, Footer, Filter } from "../components";
+import React, { useState, useEffect, useRef } from "react";
+import { Listing, Footer, Filter, CountdownTimer } from "../components";
 import {
   lamborghini,
   filter_icon,
@@ -8,20 +8,77 @@ import {
   twitter_icon,
   facebook_icon,
 } from "../assets";
+import { useParams } from "react-router-dom";
+
+import { getCurrentDateTime, postBid } from "../Helper";
+
+interface Car {
+  id: number;
+  name: string;
+  features: string;
+  description: string;
+  posted_by: string;
+  imageURL: string;
+  endTime: string;
+  username: string;
+  num_of_bids: string;
+  last_bidder_name: string;
+  last_bidding_amount: string;
+  minBidPrice: string;
+}
+
+interface PostBidInterface {
+  amount: Number;
+  timestamp: string;
+  carID: Number;
+}
 
 const ListingDetails = () => {
-  const features: string =
-    "Year: 2016\n\nMake: Lamborghini\nModel: Model:Huracán\nMileage: 29,000\nEngine: Engine: 5.2-liter V10\nTransmission: [Insert TransmissionType]\nExterior Color: Gray\nInterior Color: White\nTop Speed: 250 MPG\n0-60 MPH: 1.3s";
+  const newBid = useRef<HTMLInputElement>(null);
 
-  const description =
-    "This Lamborghini Huracán is a true work of art. Its sleek, aerodynamic design is paired with a roaring 5.2-liter V10 engine that produces exhilarating power. With advanced technology and precision craftsmanship, it's a statement of elegance and performance. Impeccably maintained, this car is in pristine condition and has been cherished by its owner. It's a head-turner wherever it goes, and it's ready to deliver an unforgettable driving experience.";
+  const { id } = useParams();
+  const [car, setCar] = useState<Car>();
+
+  useEffect(() => {
+    const ALL_CARS = import.meta.env.VITE_ALL_CARS;
+    fetch(ALL_CARS)
+      .then((response) => response.json())
+      .then((auctions) => {
+        console.log(auctions);
+        const selectedCar: Car = auctions.find(
+          (car: Car) => car.id === Number(id)
+        );
+        setCar(selectedCar);
+      });
+  }, []);
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      console.log("Enter key pressed");
+      postBidFunction();
+    }
+  };
+
+  const postBidFunction = () => {
+    const currentTimestamp = getCurrentDateTime();
+
+    const BidInfo: PostBidInterface = {
+      amount: newBid?.current?.value ? Number(newBid.current.value) : 0,
+      timestamp: currentTimestamp.toString(),
+      carID: Number(id),
+    };
+    console.log("Printing Bid Info");
+    console.log(BidInfo);
+    console.log("---------------------");
+    const response = postBid(BidInfo);
+  };
   return (
     <div className="bg-primary flex flex-col gap-5 h-full">
       <div className="flex md:flex-row flex-col w-full md:gap-5 md:p-10 p-5 md:mt-0 mt-2">
         {/* Top Left Section */}
         <div className="flex w-full rounded-lg">
           <img
-            src={lamborghini}
+            src={car?.imageURL}
             alt="car image"
             className="rounded-lg object-cover"
           />
@@ -29,11 +86,9 @@ const ListingDetails = () => {
 
         {/* Top Right Section */}
         <div className="flex flex-col w-full md:m-0 mt-5 text-medium font-semibold">
-          <div className="text-subtitle font-bold">
-            2016 Lamborghini Huracán
-          </div>
+          <div className="text-subtitle font-bold">{car?.name}</div>
           <div className="flex text-medium text-gray font-semibold gap-2 items-center">
-            <div>Thomas Jerry</div>
+            <div>{car?.posted_by}</div>
             <div>
               <img
                 src={verified_icon}
@@ -42,21 +97,36 @@ const ListingDetails = () => {
               />
             </div>
           </div>
-          <div className="mt-5">Current Bid: $1,900,300</div>
-          <div className="mt-1">Time Left: 01:29:35</div>
-          <div className="mt-1">Min Next Bid: 1,900,400</div>
+          <div className="mt-5">
+            Current Bid: $
+            {car?.last_bidding_amount
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          </div>
+          <div className="mt-1 flex">
+            Time Left:&nbsp;
+            {car?.endTime && <CountdownTimer endTime={car.endTime} />}
+          </div>
+          <div className="mt-1">
+            Min Next Bid:{" "}
+            {(Number(car?.last_bidding_amount) + 100)
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          </div>
           <div className="my-10 flex items-center gap-3">
             <div>Enter your Bid: </div>
             <div className="w-detailInputText rounded-lg">
               <input
+                onKeyDown={handleKeyPress}
+                ref={newBid}
                 placeholder="Enter Your bid"
                 className="bg-white placeholder:text-placeholder rounded-lg h-[50px] md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
               />
             </div>
           </div>
           <div className="font-normal">
-            <span className="font-bold">You</span> are currently winning this
-            bid
+            <span className="font-bold">{car?.last_bidder_name}</span> is
+            currently winning this bid
           </div>
 
           {/* Delete Button */}
@@ -72,11 +142,15 @@ const ListingDetails = () => {
       <div className="flex md:flex-row flex-col text-medium md:mt-0 mt-5 md:p-10 p-5 ">
         <div className="flex flex-col w-full">
           <div className="font-bold">Key Features:</div>
-          <div className="font-semibold mt-5">{features}</div>
+          <div className="font-semibold mt-5">
+            {car?.features.split("\\n").map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
         </div>
         <div className="flex flex-col w-full md:mt-0 mt-5">
           <div className="font-bold">Description:</div>
-          <div className="font-semibold mt-5">{description}</div>
+          <div className="font-semibold mt-5">{car?.description}</div>
         </div>
       </div>
 

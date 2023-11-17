@@ -76,36 +76,6 @@ const Home = () => {
     return date.getTime() < now.getTime();
   };
 
-  // useEffect(() => {
-  //   console.log("api called");
-
-  //   // //separate sold item max 10
-  //   // const soldcars: Car[] = [];
-  //   // cars.map((car) => {
-  //   //   if (isCarSold(car.endTime) == true) {
-  //   //     soldcars.push(car);
-  //   //   }
-  //   // });
-  //   // setRecentlySoldCars(soldcars.slice(0, 10));
-
-  //   // //separate trending list max 10
-
-  //   // //removing sold cars
-  //   // const updatedAllCars = cars.filter(
-  //   //   (car) => !soldcars.some((soldCar) => soldCar.id === car.id)
-  //   // );
-
-  //   // const sortedCars = updatedAllCars.sort((a, b) => {
-  //   //   const bidsA = parseInt(a.num_of_bids);
-  //   //   const bidsB = parseInt(b.num_of_bids);
-
-  //   //   return bidsB - bidsA;
-  //   // });
-
-  //   // const topTenCars = sortedCars.slice(0, 10);
-  //   // setTrendingCars(topTenCars);
-  // }, []);
-
   return (
     <div className="flex flex-col">
       {/* hero section */}
