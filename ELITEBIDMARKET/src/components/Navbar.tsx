@@ -1,11 +1,12 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { menu_icon } from "../assets"
-
 import { MuiDrawer } from "./"
 
 const Navbar = () => {
   const [showDropdown, setshowDropdown] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const navigate = useNavigate()
 
   const handleAccountHover = () => {
     setshowDropdown(!showDropdown)
@@ -13,6 +14,15 @@ const Navbar = () => {
 
   const handleDropdownLeave = () => {
     setshowDropdown(false)
+  }
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    navigate(`/Buy?search=${encodeURIComponent(searchQuery)}`)
   }
 
   return (
@@ -31,13 +41,16 @@ const Navbar = () => {
         </div> */}
 
         {/* Search */}
-        <div className='w-full mr-5 md:mr-0'>
+        <form onSubmit={handleSearchSubmit}>
+          {/* Updated input element with value and onChange */}
           <input
             type='search'
+            value={searchQuery}
+            onChange={handleSearchChange}
             className='md:w-search w-searchmobile rounded-full px-5 py-2 focus:border-none focus:outline-none'
             placeholder='Search'
           />
-        </div>
+        </form>
       </div>
 
       {/* right side */}

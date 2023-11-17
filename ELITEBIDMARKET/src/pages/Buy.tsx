@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Listing, Footer, Filter } from "../components";
-import { lamborghini, filter_icon } from "../assets";
+import React, { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
+import { Listing, Footer, Filter } from "../components"
+import { lamborghini, filter_icon } from "../assets"
 
 interface Car {
   id: number;
@@ -19,31 +20,40 @@ interface Car {
 
 const Buy = () => {
   const [allAvailableCars, setAllAvailableCars] = useState<Car[]>([]);
+  const [sortOption, setSortOption] = useState("");
+
+  const location = useLocation();
 
   useEffect(() => {
+    const searchQuery =
+      new URLSearchParams(window.location.search).get("search") || "";
+    console.log("Search Query:", searchQuery);
     const ALL_CARS = import.meta.env.VITE_ALL_CARS;
-    fetch(ALL_CARS)
+    fetch(`${ALL_CARS}?search=${encodeURIComponent(searchQuery)}`)
       .then((response) => response.json())
       .then((cars) => {
         console.log("api called");
         console.log(cars);
-        //separate sold item max 10
-        const soldcars: Car[] = [];
-        cars.map((car: Car) => {
-          if (isCarSold(car.endTime) == true) {
-            soldcars.push(car);
-          }
-        });
 
-        //separate trending list max 10
+        const filteredCars = searchQuery
+          ? cars.filter((car: Car) =>
+              car.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+          : cars;
 
-        //removing sold cars
-        const updatedAllCars = cars.filter(
-          (car: Car) => !soldcars.some((soldCar) => soldCar.id === car.id)
+        // Separate sold items (max 10)
+        const soldCars: Car[] = filteredCars.filter((car: Car) =>
+          isCarSold(car.endTime)
         );
+
+        // Remove sold cars
+        const updatedAllCars = filteredCars.filter(
+          (car: Car) => !soldCars.some((soldCar) => soldCar.id === car.id)
+        );
+
         setAllAvailableCars(updatedAllCars);
       });
-  }, []);
+  }, [location.search]);
 
   const isCarSold = (dateString: string): boolean => {
     const date = new Date(dateString);
@@ -51,6 +61,42 @@ const Buy = () => {
 
     return date.getTime() < now.getTime();
   };
+
+  const handleSortChange = (selectedSort: string) => {
+    setSortOption(selectedSort);
+  };
+
+  useEffect(() => {
+    let sortedCars = [...allAvailableCars];
+
+    switch (sortOption) {
+      case "A-Z":
+        sortedCars.sort((a, b) => {
+          const nameA = a.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          return nameA.localeCompare(nameB);
+        });
+        break;
+      case "Z-A":
+        sortedCars.sort((a, b) => {
+          const nameA = a.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          return nameB.localeCompare(nameA);
+        });
+        break;
+      case "LowestPrice":
+          sortedCars.sort((a, b) => parseFloat(a.last_bidding_amount) - parseFloat(b.last_bidding_amount));
+          break;
+      case "HighestPrice":
+          sortedCars.sort((a, b) => parseFloat(b.last_bidding_amount) - parseFloat(a.last_bidding_amount));
+          break;
+      default:
+        // No sorting
+        break;
+    }
+
+    setAllAvailableCars(sortedCars);
+  }, [sortOption, allAvailableCars]);
 
   return (
     <div>
@@ -60,7 +106,7 @@ const Buy = () => {
           alt="filter icon"
           className="w-[35px] object-contain"
         />
-        <Filter />
+        <Filter onSortChange={handleSortChange} />
       </div>
       <div className="flex flex-wrap xs:justify-start justify-center md:my-10 my-5 md:mx-10 mx-5 gap-10">
         {allAvailableCars.map((car) => (
