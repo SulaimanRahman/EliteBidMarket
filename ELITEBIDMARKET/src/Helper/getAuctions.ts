@@ -16,8 +16,23 @@ interface Car {
     minBidPrice: string;
   }
   
+  interface BidCar {
+    username: string;
+    carID: number;
+    name: string;
+    posted_by: string;
+    timeStamp: string;
+    car: {
+      last_bidding_amount: Number;
+      name: string;
+      posted_by: string;
+      imageURL: string;
+      endTime: string;
+    };
+  }
+  
   interface getAuctionsResponseBody {
-    my_biddings: Array<Car>;
+    my_biddings: Array<BidCar>;
     my_cars: Array<Car>;
   }
 

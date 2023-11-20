@@ -19,6 +19,21 @@ interface Car {
   minBidPrice: string;
 }
 
+interface BidCar {
+  username: string;
+  carID: number;
+  name: string;
+  posted_by: string;
+  timeStamp: string;
+  car: {
+    last_bidding_amount: Number;
+    name: string;
+    posted_by: string;
+    imageURL: string;
+    endTime: string;
+  };
+}
+
 interface getAuctionsResponseBody {
   my_biddings: Array<Car>;
   my_cars: Array<Car>;
@@ -26,7 +41,7 @@ interface getAuctionsResponseBody {
 
 const MyAuctions = () => {
   const [myPosts, setmyPosts] = useState<Car[]>([]);
-  const [myBids, setMyBids] = useState<Car[]>([]);
+  const [myBids, setMyBids] = useState<BidCar[]>([]);
 
   useEffect(() => {
     getAuctions()
@@ -64,7 +79,10 @@ const MyAuctions = () => {
             myPosts.map((car: Car) => {
               if (isCarSold(car.endTime) == true) {
                 return (
-                  <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
+                  <div
+                    key={car.id}
+                    className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+                  >
                     <ListingSold
                       id={car.id}
                       image={car.imageURL}
@@ -78,7 +96,10 @@ const MyAuctions = () => {
                 );
               } else {
                 return (
-                  <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
+                  <div
+                    key={car.id}
+                    className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+                  >
                     <Listing
                       id={car.id}
                       image={car.imageURL}
@@ -114,32 +135,38 @@ const MyAuctions = () => {
         </div>
         <div className="flex flex-wrap xs:justify-start justify-center my-10 gap-10">
           {myBids.length ? (
-            myBids.map((car: Car) => {
-              if (isCarSold(car.endTime) == true) {
+            myBids.map((bidCar: BidCar) => {
+              if (isCarSold(bidCar.car.endTime) == true) {
                 return (
-                  <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
+                  <div
+                    key={bidCar.carID}
+                    className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+                  >
                     <ListingSold
-                      id={car.id}
-                      image={car.imageURL}
-                      auctioneerName={car.posted_by}
+                      id={bidCar.carID}
+                      image={bidCar.car.imageURL}
+                      auctioneerName={bidCar.car.posted_by}
                       verified={false}
-                      title={car.name}
-                      currentBid={car.last_bidding_amount}
-                      endTime={car.endTime}
+                      title={bidCar.car.name}
+                      currentBid={bidCar.car.last_bidding_amount.toString()}
+                      endTime={bidCar.car.endTime}
                     />
                   </div>
                 );
               } else {
                 return (
-                  <div className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg">
+                  <div
+                    key={bidCar.carID}
+                    className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
+                  >
                     <Listing
-                      id={car.id}
-                      image={car.imageURL}
-                      auctioneerName={car.posted_by}
+                      id={bidCar.carID}
+                      image={bidCar.car.imageURL}
+                      auctioneerName={bidCar.car.posted_by}
                       verified={false}
-                      title={car.name}
-                      currentBid={car.last_bidding_amount}
-                      endTime={car.endTime}
+                      title={bidCar.car.name}
+                      currentBid={bidCar.car.last_bidding_amount.toString()}
+                      endTime={bidCar.car.endTime}
                     />
                   </div>
                 );

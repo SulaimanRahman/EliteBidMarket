@@ -19,13 +19,16 @@ async function postBid(BidInfo:BidPostBody): Promise<BidPostingResponseBody> {
   const POST_AUCTION = import.meta.env.VITE_POST_BID;
   const USER_TOKEN = localStorage.getItem("user-token")
   console.log(USER_TOKEN)
-
+  console.log("Bid Info:")
+  console.log(BidInfo)
   try {
     const response = await axios.post(
       POST_AUCTION,
-      { body: BidInfo },
-      { headers: { Authorization: `bearer ${USER_TOKEN}` } }
+      BidInfo,
+      { headers: { Authorization: `Bearer ${USER_TOKEN}` } }
     );
+    
+    console.log("printing response:")
     console.log(response);
     console.log("Post Submitted");
     return response.data as BidPostingResponseBody;
