@@ -10,7 +10,7 @@ import {
 } from "../assets";
 import { useParams } from "react-router-dom";
 
-import { getCurrentDateTime, postBid } from "../Helper";
+import { getCurrentDateTime, postBid, deletePost } from "../Helper";
 
 interface Car {
   id: number;
@@ -45,9 +45,13 @@ const ListingDetails = () => {
       .then((response) => response.json())
       .then((auctions) => {
         console.log(auctions);
+
         const selectedCar: Car = auctions.find(
           (car: Car) => car.id === Number(id)
         );
+        console.log("Printing the complete object:");
+        console.log(selectedCar);
+        console.log(selectedCar?.last_bidding_amount);
         setCar(selectedCar);
       });
   }, []);
@@ -59,6 +63,9 @@ const ListingDetails = () => {
     }
   };
 
+  const deleteCar = () => {
+    deletePost(id?.toString());
+  };
   const postBidFunction = () => {
     const currentTimestamp = getCurrentDateTime();
 
@@ -100,8 +107,10 @@ const ListingDetails = () => {
           <div className="mt-5">
             Current Bid: $
             {car?.last_bidding_amount
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              ? car?.last_bidding_amount
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              : car?.minBidPrice}
           </div>
           <div className="mt-1 flex">
             Time Left:&nbsp;
@@ -109,9 +118,13 @@ const ListingDetails = () => {
           </div>
           <div className="mt-1">
             Min Next Bid:{" "}
-            {(Number(car?.last_bidding_amount) + 100)
-              .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {car?.last_bidding_amount
+              ? (Number(car?.last_bidding_amount) + 100)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              : (Number(car?.minBidPrice) + 100)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           </div>
           <div className="my-10 flex items-center gap-3">
             <div>Enter your Bid: </div>
@@ -125,13 +138,18 @@ const ListingDetails = () => {
             </div>
           </div>
           <div className="font-normal">
-            <span className="font-bold">{car?.last_bidder_name}</span> is
-            currently winning this bid
+            <span className="font-bold">
+              {car?.last_bidder_name ? car?.last_bidder_name : "No one"}
+            </span>{" "}
+            is currently winning this bid
           </div>
 
           {/* Delete Button */}
           <div className="mt-10 w-deleteButton">
-            <div className="bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer">
+            <div
+              className="bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer"
+              onClick={deleteCar}
+            >
               Delete Post
             </div>
           </div>
@@ -143,7 +161,7 @@ const ListingDetails = () => {
         <div className="flex flex-col w-full">
           <div className="font-bold">Key Features:</div>
           <div className="font-semibold mt-5">
-            {car?.features.split("\\n").map((line) => (
+            {car?.features.split("\n").map((line) => (
               <p key={line}>{line}</p>
             ))}
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Filter, Footer, Listing, ListingSold } from "../components";
 import { filter_icon, lamborghini } from "../assets";
 import axios from "axios";
-import { getAuctions } from "../Helper";
+import { getAuctions, deletePost } from "../Helper";
 
 interface Car {
   id: number;
@@ -106,7 +106,11 @@ const MyAuctions = () => {
                       auctioneerName={car.posted_by}
                       verified={false}
                       title={car.name}
-                      currentBid={car.last_bidding_amount}
+                      currentBid={
+                        car.last_bidding_amount
+                          ? car.last_bidding_amount
+                          : car.minBidPrice
+                      }
                       endTime={car.endTime}
                     />
                   </div>

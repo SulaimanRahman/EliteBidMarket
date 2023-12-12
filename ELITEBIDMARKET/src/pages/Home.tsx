@@ -138,7 +138,11 @@ const Home = () => {
                 auctioneerName={car.posted_by}
                 verified={false}
                 title={car.name}
-                currentBid={car.last_bidding_amount}
+                currentBid={
+                  car.last_bidding_amount
+                    ? car.last_bidding_amount
+                    : car.minBidPrice
+                }
                 endTime={car.endTime}
               />
             </div>
@@ -163,7 +167,11 @@ const Home = () => {
                 auctioneerName={car.posted_by}
                 verified={false}
                 title={car.name}
-                currentBid={car.last_bidding_amount}
+                currentBid={
+                  car.last_bidding_amount
+                    ? car.last_bidding_amount
+                    : car.minBidPrice
+                }
                 endTime={car.endTime}
               />
             </div>

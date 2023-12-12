@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
-import { Listing, Footer, Filter } from "../components"
-import { lamborghini, filter_icon } from "../assets"
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Listing, Footer, Filter } from "../components";
+import { lamborghini, filter_icon } from "../assets";
 
 interface Car {
   id: number;
@@ -72,24 +72,32 @@ const Buy = () => {
     switch (sortOption) {
       case "A-Z":
         sortedCars.sort((a, b) => {
-          const nameA = a.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
-          const nameB = b.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
           return nameA.localeCompare(nameB);
         });
         break;
       case "Z-A":
         sortedCars.sort((a, b) => {
-          const nameA = a.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
-          const nameB = b.name.trim().replace(/^\d+\s*/, ''); // Remove leading numbers
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
           return nameB.localeCompare(nameA);
         });
         break;
       case "LowestPrice":
-          sortedCars.sort((a, b) => parseFloat(a.last_bidding_amount) - parseFloat(b.last_bidding_amount));
-          break;
+        sortedCars.sort(
+          (a, b) =>
+            parseFloat(a.last_bidding_amount) -
+            parseFloat(b.last_bidding_amount)
+        );
+        break;
       case "HighestPrice":
-          sortedCars.sort((a, b) => parseFloat(b.last_bidding_amount) - parseFloat(a.last_bidding_amount));
-          break;
+        sortedCars.sort(
+          (a, b) =>
+            parseFloat(b.last_bidding_amount) -
+            parseFloat(a.last_bidding_amount)
+        );
+        break;
       default:
         // No sorting
         break;
@@ -120,7 +128,11 @@ const Buy = () => {
               auctioneerName={car.posted_by}
               verified={false}
               title={car.name}
-              currentBid={car.last_bidding_amount}
+              currentBid={
+                car.last_bidding_amount
+                  ? car.last_bidding_amount
+                  : car.minBidPrice
+              }
               endTime={car.endTime}
             />
           </div>

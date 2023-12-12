@@ -1,35 +1,38 @@
 import axios from 'axios';
 import React, {useContext} from 'react'
 
-interface BidPostBody {
-  amount: Number;
-  timestamp: string;
-  carID: Number;
+interface CarPostBody {
+  name: String;
+  features: string;
+  description: string;
+  imageURL: string;
+  minBidPrice: string
+  endTime: string
 }
 
-interface BidPostingResponseBody {
+interface CarPostingResponseBody {
   "Success": boolean,
   "Message": string,
   "data": {},
   "error": {}
 }
 
-async function postBid(BidInfo:BidPostBody): Promise<BidPostingResponseBody> {
-  console.log(BidInfo)
-  const POST_AUCTION = import.meta.env.VITE_POST_BID;
+async function postBid(CarInfo:CarPostBody): Promise<CarPostingResponseBody> {
+  console.log(CarInfo)
+  const POST_AUCTION = import.meta.env.VITE_POST_CAR;
   const USER_TOKEN = localStorage.getItem("user-token")
   console.log(USER_TOKEN)
-  console.log("Bid Info:")
-  console.log(BidInfo)
+  console.log("Car Info:")
+  console.log(CarInfo)
   try {
     const response = await axios.post(
       POST_AUCTION,
-      BidInfo,
+      CarInfo,
       { headers: { Authorization: `Bearer ${USER_TOKEN}` } }
     );
 
     console.log("Post Submitted");
-    return response.data as BidPostingResponseBody;
+    return response.data as CarPostingResponseBody;
   } catch (error:any) {
     console.error("Error posting bid:", error.response || error.message);
     throw error; // Re-throw the error to handle it at the caller's level
