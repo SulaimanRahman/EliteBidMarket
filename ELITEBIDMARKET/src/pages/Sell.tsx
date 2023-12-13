@@ -79,6 +79,19 @@ const Sell = () => {
       };
       console.log(CarInfo);
       postCar(CarInfo);
+      if (
+        itemName.current &&
+        minBid.current &&
+        imageURL.current &&
+        itemFeatures.current &&
+        itemDescription.current != null
+      ) {
+        itemName.current.value = "";
+        minBid.current.value = "";
+        imageURL.current.value = "";
+        itemFeatures.current.value = "";
+        itemDescription.current.value = "";
+      }
     } else {
       console.log("Some values are undefined");
     }

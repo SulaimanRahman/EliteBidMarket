@@ -34,6 +34,21 @@ interface BidCar {
   };
 }
 
+interface BidCar {
+  username: string;
+  carID: number;
+  name: string;
+  posted_by: string;
+  timeStamp: string;
+  car: {
+    last_bidding_amount: Number;
+    name: string;
+    posted_by: string;
+    imageURL: string;
+    endTime: string;
+  };
+}
+
 interface getAuctionsResponseBody {
   my_biddings: Array<Car>;
   my_cars: Array<Car>;
@@ -47,7 +62,24 @@ const MyAuctions = () => {
     getAuctions()
       .then((auctions) => {
         setmyPosts(auctions.my_cars);
-        setMyBids(auctions.my_biddings);
+        // setMyBids(auctions.my_biddings);
+        const mybiddingsFiltered = new Set<BidCar>();
+        auctions.my_biddings.filter((obj) => {
+          const key = obj.carID;
+          let duplicateFound = false;
+          for (const seenObj of mybiddingsFiltered) {
+            if (seenObj.carID === obj.carID) {
+              duplicateFound = true;
+              break;
+            }
+          }
+          if (duplicateFound) {
+            return false;
+          }
+          mybiddingsFiltered.add(obj);
+          return true;
+        });
+        setMyBids([...mybiddingsFiltered]);
       })
       .catch((error) => {
         console.error(error);
