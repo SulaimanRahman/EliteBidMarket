@@ -31,6 +31,7 @@ const SignIn = () => {
       try {
         const responseData = signInUser(userData);
       } catch (error) {
+        alert("Login Failed");
         console.error("Sign-in failed:", error);
       }
     } else {

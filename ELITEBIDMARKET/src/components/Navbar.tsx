@@ -33,6 +33,8 @@ const Navbar = () => {
 
   const logoutUser = () => {
     localStorage.removeItem("user-token");
+    localStorage.removeItem("user-email");
+
     setUserLoggedIn(false);
   };
 

@@ -30,13 +30,20 @@ interface SignInResponseBody {
 
 async function signInUser(userData: SignInRequestBody): Promise<SignInResponseBody> {
   const SIGN_IN = import.meta.env.VITE_SIGN_IN;
-  const response = await axios.post(SIGN_IN, userData);
-  const ID_TOKEN = response.data.data.AuthenticationResult.IdToken;
-  localStorage.setItem("user-token", ID_TOKEN)
-  localStorage.setItem("user-email", userData.username)
+  let results = undefined
+  try {
+    const response = await axios.post(SIGN_IN, userData);
+    const ID_TOKEN = response.data.data.AuthenticationResult.IdToken;
+    localStorage.setItem("user-token", ID_TOKEN)
+    localStorage.setItem("user-email", userData.username)
+    results = response
+    console.log(ID_TOKEN)
+  } catch (error) {
+    alert("Login failed. Please try again");
+    console.error("Sign-in failed:", error);
+  }
 
-  console.log(ID_TOKEN)
-  return response.data as SignInResponseBody;
+  return results?.data as SignInResponseBody;
 }
 
 export default signInUser
