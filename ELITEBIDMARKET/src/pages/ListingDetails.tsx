@@ -84,7 +84,9 @@ const ListingDetails = () => {
   };
 
   const deleteCar = () => {
-    deletePost(id?.toString());
+    if (id != undefined) {
+      deletePost(id?.toString());
+    }
   };
   const postBidFunction = () => {
     const currentTimestamp = getCurrentDateTime();

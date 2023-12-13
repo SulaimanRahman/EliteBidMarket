@@ -38,6 +38,8 @@ async function signInUser(userData: SignInRequestBody): Promise<SignInResponseBo
     localStorage.setItem("user-email", userData.username)
     results = response
     console.log(ID_TOKEN)
+    window.location.href = "/Buy";
+
   } catch (error) {
     alert("Login failed. Please try again");
     console.error("Sign-in failed:", error);

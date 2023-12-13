@@ -57,6 +57,10 @@ interface getAuctionsResponseBody {
 const MyAuctions = () => {
   const [myPosts, setmyPosts] = useState<Car[]>([]);
   const [myBids, setMyBids] = useState<BidCar[]>([]);
+
+  const [myPostSortOption, setMyPostSortOption] = useState("");
+  const [myBidsSortOption, setMyBidsSortOption] = useState("");
+
   useEffect(() => {
     if (localStorage.getItem("user-token")) {
       console.log("User is logged in");
@@ -90,6 +94,94 @@ const MyAuctions = () => {
     }
   }, []);
 
+  const handleMyPostSortChange = (selectedSort: string) => {
+    setMyPostSortOption(selectedSort);
+  };
+
+  useEffect(() => {
+    let sortedCars = [...myPosts];
+
+    switch (myPostSortOption) {
+      case "A-Z":
+        sortedCars.sort((a, b) => {
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameA.localeCompare(nameB);
+        });
+        break;
+      case "Z-A":
+        sortedCars.sort((a, b) => {
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameB.localeCompare(nameA);
+        });
+        break;
+      case "LowestPrice":
+        sortedCars.sort(
+          (a, b) =>
+            parseFloat(a.last_bidding_amount) -
+            parseFloat(b.last_bidding_amount)
+        );
+        break;
+      case "HighestPrice":
+        sortedCars.sort(
+          (a, b) =>
+            parseFloat(b.last_bidding_amount) -
+            parseFloat(a.last_bidding_amount)
+        );
+        break;
+      default:
+        // No sorting
+        break;
+    }
+
+    setmyPosts(sortedCars);
+  }, [myPostSortOption, myPosts]);
+
+  const handleMyBidsSortChange = (selectedSort: string) => {
+    setMyBidsSortOption(selectedSort);
+  };
+
+  useEffect(() => {
+    let sortedCars = [...myBids];
+
+    switch (myBidsSortOption) {
+      case "A-Z":
+        sortedCars.sort((a, b) => {
+          const nameA = a.car.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.car.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameA.localeCompare(nameB);
+        });
+        break;
+      case "Z-A":
+        sortedCars.sort((a, b) => {
+          const nameA = a.car.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.car.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameB.localeCompare(nameA);
+        });
+        break;
+      case "LowestPrice":
+        sortedCars.sort((a, b) => {
+          const priceA = String(a.car.last_bidding_amount);
+          const priceB = String(b.car.last_bidding_amount);
+          return parseFloat(priceA) - parseFloat(priceB);
+        });
+        break;
+      case "HighestPrice":
+        sortedCars.sort((a, b) => {
+          const priceA = String(a.car.last_bidding_amount);
+          const priceB = String(b.car.last_bidding_amount);
+          return parseFloat(priceB) - parseFloat(priceA);
+        });
+        break;
+      default:
+        // No sorting
+        break;
+    }
+
+    setMyBids(sortedCars);
+  }, [myBidsSortOption, myBids]);
+
   const isCarSold = (dateString: string): boolean => {
     const date = new Date(dateString);
     const now = new Date();
@@ -108,7 +200,7 @@ const MyAuctions = () => {
             alt="filter icon"
             className="w-[35px] object-contain"
           />
-          <Filter />
+          <Filter onSortChange={handleMyPostSortChange} />
         </div>
         <div className="flex flex-wrap xs:justify-start justify-center my-10 gap-10">
           {myPosts.length ? (
@@ -175,7 +267,7 @@ const MyAuctions = () => {
             alt="filter icon"
             className="w-[35px] object-contain"
           />
-          <Filter />
+          <Filter onSortChange={handleMyBidsSortChange} />
         </div>
         <div className="flex flex-wrap xs:justify-start justify-center my-10 gap-10">
           {myBids.length ? (
