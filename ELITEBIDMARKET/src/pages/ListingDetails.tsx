@@ -38,8 +38,16 @@ const ListingDetails = () => {
 
   const { id } = useParams();
   const [car, setCar] = useState<Car>();
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const [auctionExpired, setAuctionExpired] = useState(false);
+  const [userIsTheOwner, setUserIsTheOwner] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("user-token")) {
+      console.log("User is logged in");
+      setUserIsLoggedIn(true);
+    }
+
     const ALL_CARS = import.meta.env.VITE_ALL_CARS;
     fetch(ALL_CARS)
       .then((response) => response.json())
@@ -53,6 +61,18 @@ const ListingDetails = () => {
         console.log(selectedCar);
         console.log(selectedCar?.last_bidding_amount);
         setCar(selectedCar);
+
+        if (selectedCar.username == localStorage.getItem("user-email")) {
+          setUserIsTheOwner(true);
+        }
+
+        const now = new Date();
+        const end = new Date(selectedCar.endTime);
+        const timeDifference = end.getTime() - now.getTime();
+
+        if (timeDifference <= 0) {
+          setAuctionExpired(true);
+        }
       });
   }, []);
 
@@ -132,6 +152,7 @@ const ListingDetails = () => {
               <input
                 onKeyDown={handleKeyPress}
                 ref={newBid}
+                disabled={!userIsLoggedIn || auctionExpired}
                 placeholder="Enter Your bid"
                 className="bg-white placeholder:text-placeholder rounded-lg h-[50px] md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
               />
@@ -145,14 +166,18 @@ const ListingDetails = () => {
           </div>
 
           {/* Delete Button */}
-          <div className="mt-10 w-deleteButton">
-            <div
-              className="bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer"
-              onClick={deleteCar}
-            >
-              Delete Post
+          {userIsTheOwner ? (
+            <div className="mt-10 w-deleteButton">
+              <div
+                className="bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer"
+                onClick={deleteCar}
+              >
+                Delete Post
+              </div>
             </div>
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 

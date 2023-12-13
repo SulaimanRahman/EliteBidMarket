@@ -33,6 +33,8 @@ async function signInUser(userData: SignInRequestBody): Promise<SignInResponseBo
   const response = await axios.post(SIGN_IN, userData);
   const ID_TOKEN = response.data.data.AuthenticationResult.IdToken;
   localStorage.setItem("user-token", ID_TOKEN)
+  localStorage.setItem("user-email", userData.username)
+
   console.log(ID_TOKEN)
   return response.data as SignInResponseBody;
 }

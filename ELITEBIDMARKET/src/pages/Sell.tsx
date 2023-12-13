@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   InputText,
   MessageInput,
@@ -30,6 +30,14 @@ interface PostCarInterface {
 }
 
 const Sell = () => {
+  useEffect(() => {
+    if (localStorage.getItem("user-token")) {
+      console.log("User is logged in");
+    } else {
+      window.location.href = "/SignIn";
+    }
+  }, []);
+
   const itemName = useRef<HTMLInputElement>(null);
   const minBid = useRef<HTMLInputElement>(null);
   // const endDateTime = useRef<HTMLInputElement>(null);

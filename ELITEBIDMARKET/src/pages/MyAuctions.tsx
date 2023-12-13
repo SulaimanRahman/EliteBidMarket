@@ -57,33 +57,37 @@ interface getAuctionsResponseBody {
 const MyAuctions = () => {
   const [myPosts, setmyPosts] = useState<Car[]>([]);
   const [myBids, setMyBids] = useState<BidCar[]>([]);
-
   useEffect(() => {
-    getAuctions()
-      .then((auctions) => {
-        setmyPosts(auctions.my_cars);
-        // setMyBids(auctions.my_biddings);
-        const mybiddingsFiltered = new Set<BidCar>();
-        auctions.my_biddings.filter((obj) => {
-          const key = obj.carID;
-          let duplicateFound = false;
-          for (const seenObj of mybiddingsFiltered) {
-            if (seenObj.carID === obj.carID) {
-              duplicateFound = true;
-              break;
+    if (localStorage.getItem("user-token")) {
+      console.log("User is logged in");
+      getAuctions()
+        .then((auctions) => {
+          setmyPosts(auctions.my_cars);
+          // setMyBids(auctions.my_biddings);
+          const mybiddingsFiltered = new Set<BidCar>();
+          auctions.my_biddings.filter((obj) => {
+            const key = obj.carID;
+            let duplicateFound = false;
+            for (const seenObj of mybiddingsFiltered) {
+              if (seenObj.carID === obj.carID) {
+                duplicateFound = true;
+                break;
+              }
             }
-          }
-          if (duplicateFound) {
-            return false;
-          }
-          mybiddingsFiltered.add(obj);
-          return true;
+            if (duplicateFound) {
+              return false;
+            }
+            mybiddingsFiltered.add(obj);
+            return true;
+          });
+          setMyBids([...mybiddingsFiltered]);
+        })
+        .catch((error) => {
+          console.error(error);
         });
-        setMyBids([...mybiddingsFiltered]);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    } else {
+      window.location.href = "/SignIn";
+    }
   }, []);
 
   const isCarSold = (dateString: string): boolean => {
@@ -121,7 +125,11 @@ const MyAuctions = () => {
                       auctioneerName={car.posted_by}
                       verified={false}
                       title={car.name}
-                      currentBid={car.last_bidding_amount}
+                      currentBid={
+                        car.last_bidding_amount
+                          ? car.last_bidding_amount
+                          : car.minBidPrice
+                      }
                       endTime={car.endTime}
                     />
                   </div>

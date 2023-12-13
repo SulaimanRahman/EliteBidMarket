@@ -29,6 +29,13 @@ async function postBid(BidInfo:BidPostBody): Promise<BidPostingResponseBody> {
     );
 
     console.log("Post Submitted");
+    console.log(response.status)
+    if (response.status  == 200) {
+      alert("Bid Posted Successfully")
+      window.location.reload()
+    } else {
+
+    }
     return response.data as BidPostingResponseBody;
   } catch (error:any) {
     console.error("Error posting bid:", error.response || error.message);

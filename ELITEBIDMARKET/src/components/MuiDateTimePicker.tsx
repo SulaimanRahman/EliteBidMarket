@@ -14,7 +14,7 @@ const DateTimePickerValue = () => {
     "Tue Apr 05 2022 15:30:00 GMT-0700 (Pacific Daylight Time)"
   );
 
-  const [Value, setValue] = useState(second);
+  // const [Value, setValue] = useState(second)
   const getDate = (newValue: string) => {
     console.log(newValue.$d);
     // const formatedDate = dateConverter(newValue.$d);
