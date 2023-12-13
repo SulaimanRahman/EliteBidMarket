@@ -1,37 +1,57 @@
-import React, { useEffect, useState, ChangeEvent, FormEvent } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { menu_icon } from "../assets"
-import { MuiDrawer } from "./"
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { menu_icon } from "../assets";
+import { MuiDrawer } from "./";
 
 const Navbar = () => {
-  const [showDropdown, setshowDropdown] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const navigate = useNavigate()
+  useEffect(() => {
+    checkIfUserIsLoggedIn();
+  }, []);
+
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [showDropdown, setshowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleAccountHover = () => {
-    setshowDropdown(!showDropdown)
-  }
+    checkIfUserIsLoggedIn();
+    setshowDropdown(!showDropdown);
+  };
 
   const handleDropdownLeave = () => {
-    setshowDropdown(false)
-  }
+    setshowDropdown(false);
+  };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value)
-  }
+    setSearchQuery(e.target.value);
+  };
 
   const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    navigate(`/Buy?search=${encodeURIComponent(searchQuery)}`)
-  }
+    e.preventDefault();
+    navigate(`/Buy?search=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem("user-token");
+    setUserLoggedIn(false);
+  };
+
+  const checkIfUserIsLoggedIn = () => {
+    if (localStorage.getItem("user-token")) {
+      console.log("User is logged in");
+      setUserLoggedIn(true);
+    } else {
+      setUserLoggedIn(false);
+    }
+  };
 
   return (
-    <div className='bg-primary flex md:justify-between fixed w-full'>
+    <div className="bg-primary flex md:justify-between fixed w-full">
       {/* left side */}
-      <div className='flex items-center w-full md:pt-0 py-2'>
+      <div className="flex items-center w-full md:pt-0 py-2">
         {/* Title */}
-        <div className='text-logo font-bold mx-10 md:flex hidden'>
-          <Link to='/'>EBM</Link>
+        <div className="text-logo font-bold mx-10 md:flex hidden">
+          <Link to="/">EBM</Link>
         </div>
 
         {/* Mobile Menu Icon */}
@@ -41,52 +61,63 @@ const Navbar = () => {
         </div> */}
 
         {/* Search */}
-        <form onSubmit={handleSearchSubmit}>
+        <form onSubmit={handleSearchSubmit} className="w-full mr-5">
           {/* Updated input element with value and onChange */}
           <input
-            type='search'
+            type="search"
             value={searchQuery}
             onChange={handleSearchChange}
-            className='md:w-search w-searchmobile rounded-full px-5 py-2 focus:border-none focus:outline-none'
-            placeholder='Search'
+            className="md:w-search w-searchmobile rounded-full px-5 py-2 focus:border-none focus:outline-none"
+            placeholder="Search"
           />
         </form>
       </div>
 
       {/* right side */}
-      <div className='md:flex w-full justify-end hidden lg:gap-10 gap-7 items-center font-semibold text-menu px-5'>
-        <Link to='/Buy' className='hover:text-white'>
+      <div className="md:flex w-full justify-end hidden lg:gap-10 gap-7 items-center font-semibold text-menu px-5">
+        <Link to="/Buy" className="hover:text-white">
           Buy
         </Link>
-        <Link to='/Sell' className='hover:text-white'>
+        <Link to="/Sell" className="hover:text-white">
           Sell
         </Link>
-        <Link to='/MyAuctions' className='hover:text-white'>
+        <Link to="/MyAuctions" className="hover:text-white">
           My Auctions
         </Link>
-        <Link to='/AboutUs' className='hover:text-white'>
+        <Link to="/AboutUs" className="hover:text-white">
           About Us
         </Link>
         <div
-          className='cursor-pointer hover:text-white'
+          className="cursor-pointer hover:text-white"
           onMouseEnter={handleAccountHover}
           onMouseLeave={handleDropdownLeave}
         >
           Account
           {showDropdown && (
-            <ul className='absolute text-black bg-primary text-center w-[175px] pt-3 right-0'>
-              <li className='hover:text-white text-black hover:bg-buttonHover w-full bg-button'>
-                <Link to='/SignIn'>Sign In</Link>
-              </li>
-              <li className='hover:text-white hover:bg-buttonHover w-full bg-button'>
-                <Link to='/SignUp'>Sign Up</Link>
-              </li>
+            <ul className="absolute text-black bg-primary text-center w-[175px] pt-3 right-0">
+              {!userLoggedIn && (
+                <>
+                  <li className="hover:text-white text-black hover:bg-buttonHover w-full bg-button">
+                    <Link to="/SignIn">Sign In</Link>
+                  </li>
+                  <li className="hover:text-white hover:bg-buttonHover w-full bg-button">
+                    <Link to="/SignUp">Sign Up</Link>
+                  </li>
+                </>
+              )}
+              {userLoggedIn && (
+                <li className="hover:text-white hover:bg-buttonHover w-full bg-button">
+                  <Link to="/" onClick={logoutUser}>
+                    Log Out
+                  </Link>
+                </li>
+              )}
             </ul>
           )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
