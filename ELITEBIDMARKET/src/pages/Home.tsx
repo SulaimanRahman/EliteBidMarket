@@ -236,7 +236,14 @@ const Home = () => {
           </div>
           <div className="w-contactus">
             Get in <span className="text-white">touch with us</span> for more
-            information
+            information on <span className="text-red">social media</span> or by <span className="text-blue-500">phone</span> or <span className="text-green-500">email</span>...
+            <div className="text-white">----------------------------</div>
+            <div className="Phone Number As Words text-blue-500">(818) EBM-SHOP</div>
+            <div className="pl-28">or</div>
+            <div className="Phone Number As Digits text-blue-500">(818) 326-7467</div>
+            <div className="pl-28">or</div>
+            <div className="Email text-green-500">EBM@Auction.com</div>
+            <div className="text-white">----------------------------</div>
           </div>
           <div className="flex md:mt-20 mt-10">
             <div className="text-white font-normal">
