@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { sign_in_image } from "../assets";
 import { Link } from "react-router-dom";
 import { signInUser } from "../Helper";
+import { useNavigate } from "react-router-dom";
 
 interface SignInDataInterface {
   success: Boolean;
@@ -11,6 +12,7 @@ interface SignInDataInterface {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -21,7 +23,7 @@ const SignIn = () => {
     }
   }, []);
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (email.current !== null && password.current !== null) {
       const userData = {
         username: email.current.value,
@@ -29,7 +31,13 @@ const SignIn = () => {
       };
 
       try {
-        const responseData = signInUser(userData);
+        const responseData = await signInUser(userData);
+
+        // Assuming responseData.success indicates a successful sign-in
+        if (responseData.success) {
+          // Redirect to Buy.tsx
+          navigate("/EliteBidMarket/ELITEBIDMARKET/src/pages/Buy.tsx");
+        }
       } catch (error) {
         console.error("Sign-in failed:", error);
       }

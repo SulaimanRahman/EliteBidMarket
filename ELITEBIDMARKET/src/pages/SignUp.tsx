@@ -65,7 +65,7 @@ const SignUp = () => {
           if (response.ok) {
             console.log("User registered successfully")
 
-            navigate("/")
+            navigate("/EliteBidMarket/ELITEBIDMARKET/src/pages/SignIn.tsx")
           } else {
             const errorData = await response.json()
             setError(errorData.message || "Registration failed")
@@ -80,7 +80,7 @@ const SignUp = () => {
 
       makeApiRequest()
     }
-  }, [loading, userData])
+  }, [loading, userData, navigate])
 
   return (
     <div className='bg-primary flex flex-col md:flex-row justify-around md:p-10 p-5 text-large md:h-[100vh]'>
