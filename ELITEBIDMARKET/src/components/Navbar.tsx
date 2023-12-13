@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { menu_icon } from "../assets";
 import { MuiDrawer } from "./";
 
@@ -75,16 +75,36 @@ const Navbar = () => {
 
       {/* right side */}
       <div className="md:flex w-full justify-end hidden lg:gap-10 gap-7 items-center font-semibold text-menu px-5">
-        <Link to="/Buy" className="hover:text-white">
+        <Link
+          to="/Buy"
+          className={`hover:text-white ${
+            location.pathname === "/Buy" && "text-white"
+          }`}
+        >
           Buy
         </Link>
-        <Link to="/Sell" className="hover:text-white">
+        <Link
+          to="/Sell"
+          className={`hover:text-white ${
+            location.pathname === "/Sell" && "text-white"
+          }`}
+        >
           Sell
         </Link>
-        <Link to="/MyAuctions" className="hover:text-white">
+        <Link
+          to="/MyAuctions"
+          className={`hover:text-white ${
+            location.pathname === "/MyAuctions" && "text-white"
+          }`}
+        >
           My Auctions
         </Link>
-        <Link to="/AboutUs" className="hover:text-white">
+        <Link
+          to="/AboutUs"
+          className={`hover:text-white ${
+            location.pathname === "/AboutUs" && "text-white"
+          }`}
+        >
           About Us
         </Link>
         <div
@@ -98,10 +118,24 @@ const Navbar = () => {
               {!userLoggedIn && (
                 <>
                   <li className="hover:text-white text-black hover:bg-buttonHover w-full bg-button">
-                    <Link to="/SignIn">Sign In</Link>
+                    <Link
+                      to="/SignIn"
+                      className={`${
+                        location.pathname === "/SignIn" && "text-white"
+                      }`}
+                    >
+                      Sign In
+                    </Link>
                   </li>
                   <li className="hover:text-white hover:bg-buttonHover w-full bg-button">
-                    <Link to="/SignUp">Sign Up</Link>
+                    <Link
+                      to="/SignUp"
+                      className={`${
+                        location.pathname === "/SignUp" && "text-white"
+                      }`}
+                    >
+                      Sign Up
+                    </Link>
                   </li>
                 </>
               )}
