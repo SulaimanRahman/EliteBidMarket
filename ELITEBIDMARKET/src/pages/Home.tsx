@@ -79,8 +79,11 @@ const Home = () => {
   return (
     <div className="flex flex-col">
       {/* hero section */}
-      <div className="hidden md:flex items-center justify-center bg-primary">
-        <div className="flex flex-col p-10 w-2/4 items-center justify-center">
+      <div className="hidden md:flex bg-primary">
+        <div className="flex flex-col p-10 w-2/4">
+          <div className="flex w-40 text-left text-blue-500 font-bold text-large">
+            {hero_section.subtext0} <img src={`${hero_section.blockbuster}`}/>
+          </div>
           <div className="font-bold text-title py-vertical max-w-[35rem]">
             {hero_section.title}
           </div>

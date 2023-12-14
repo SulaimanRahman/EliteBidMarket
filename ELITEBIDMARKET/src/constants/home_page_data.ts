@@ -7,6 +7,7 @@ import hero_image from "../assets//hero_image.png"
 import instagram_icon from "../assets//instagram_icon.png"
 import lamborghini from "../assets//lamborghini.png"
 import twitter_icon from "../assets//twitter_icon.png"
+import blockbuster from "../assets//blockbuster.jpg"
 
 export const navLinks = [
   {
@@ -30,8 +31,9 @@ export const navLinks = [
     title: "About Us",
   },
 ]
-
 export const hero_section = {
+  subtext0: "EBM powered by Blockbuster.",
+  blockbuster: blockbuster,
   title: "Discover the Thrill of Winning!",
   subtext: "Unleash Your Competitive Spirit and Bid on Exciting Auctions",
   button_text: "Start Bidding Now",
@@ -223,6 +225,7 @@ export const footer = {
   facebook_icon: facebook_icon,
   instagram_icon: instagram_icon,
   twitter_icon: twitter_icon,
+
   text1: "@ 2023 Elite Bid Market (EBM)",
   text2: "Privacy Policy | Terms of Service",
 }
