@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef, useContext } from "react"
+import { useEffect, useRef } from "react"
 import { sign_in_image } from "../assets"
 import { Link } from "react-router-dom"
 import { signInUser } from "../Helper"
 
-interface SignInDataInterface {
-  success: Boolean
-  access_token: string
-  email: string
-  name: string
-}
+// interface SignInDataInterface {
+//   success: Boolean
+//   access_token: string
+//   email: string
+//   name: string
+// }
 
 const SignIn = () => {
   const email = useRef<HTMLInputElement>(null)

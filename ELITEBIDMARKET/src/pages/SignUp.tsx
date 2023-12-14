@@ -148,11 +148,11 @@ const SignUp = () => {
             </button>
           </form>
           <br />
-          <div className='font-normal text-medium md:mb-16 mb-10'>
+          <div className='font-normal text-medium md:mb-16 mb-5'>
             Already have an account?
             <Link to='/SignIn' className='text-yellow-300'>
               {" "}
-              Register
+              Sign In
             </Link>
           </div>
         </div>
