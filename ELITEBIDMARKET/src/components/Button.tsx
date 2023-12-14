@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 
 interface MessageInputProps {
   title: string
@@ -11,5 +11,5 @@ const Button = (props: MessageInputProps) => {
     </div>
   )
 }
-
+//
 export default Button
