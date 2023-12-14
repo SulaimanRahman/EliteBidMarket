@@ -21,7 +21,7 @@ const SignIn = () => {
     }
   }, [])
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (email.current !== null && password.current !== null) {
       const userData = {
         username: email.current.value,
@@ -29,14 +29,17 @@ const SignIn = () => {
       }
 
       try {
-        const responseData = signInUser(userData)
+        const responseData = await signInUser(userData)
+
+        // Handle the success case
+        console.log("Sign-in successful:", responseData)
       } catch (error) {
+        // Handle the error case
         alert("Login Failed")
         console.error("Sign-in failed:", error)
       }
     } else {
       console.log("Please enter email and password")
-      //console.log("Please enter email and password");
     }
   }
 
