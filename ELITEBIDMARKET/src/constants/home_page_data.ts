@@ -5,7 +5,7 @@ import contact_us_icon from "../assets//contact_us_icon.png"
 import facebook_icon from "../assets//facebook_icon.png"
 import hero_image from "../assets//hero_image.png"
 import instagram_icon from "../assets//instagram_icon.png"
-import lamborghini from "../assets//lamborghini.png"
+// import lamborghini from "../assets//lamborghini.png"
 import twitter_icon from "../assets//twitter_icon.png"
 
 export const navLinks = [

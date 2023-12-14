@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 import { facebook_icon, instagram_icon, twitter_icon } from "../assets"
 
 const Footer = () => {

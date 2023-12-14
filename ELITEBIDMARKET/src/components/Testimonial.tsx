@@ -1,4 +1,4 @@
-import React from "react"
+// import React from "react"
 import { three_stars_icon } from "../assets"
 
 interface TestimonialProps {
