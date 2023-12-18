@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   hero_section,
   contact_us_section,
@@ -33,6 +33,10 @@ interface Car {
 const Home = () => {
   const [trendingCars, setTrendingCars] = useState<Car[]>([]);
   const [recentlySoldCars, setRecentlySoldCars] = useState<Car[]>([]);
+  const contactFirstName = useRef<HTMLInputElement>(null);
+  const contactLastName = useRef<HTMLInputElement>(null);
+  const contactEmail = useRef<HTMLInputElement>(null);
+  const contactMessage = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     const ALL_CARS = import.meta.env.VITE_ALL_CARS;
@@ -73,6 +77,23 @@ const Home = () => {
     const now = new Date();
 
     return date.getTime() < now.getTime();
+  };
+
+  const sendMessage = () => {
+    if (
+      contactFirstName.current?.value &&
+      contactLastName.current?.value &&
+      contactEmail.current?.value &&
+      contactMessage.current?.value
+    ) {
+      console.log("Sending Message");
+      contactFirstName.current.value = "";
+      contactLastName.current.value = "";
+      contactEmail.current.value = "";
+      contactMessage.current.value = "";
+    } else {
+      alert("Please fill out all the requried fields to contact us.");
+    }
   };
 
   return (
@@ -230,21 +251,38 @@ const Home = () => {
           </div>
           <div className="flex md:mt-20 mt-10">
             <div className="text-white font-normal">
-              <InputText placeholder="First Name" />
+              <input
+                ref={contactFirstName}
+                placeholder="First Name"
+                className="bg-primary md:border-b-2 border-b-[1px] border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
+              />
             </div>
             <div className="text-white font-normal ml-5">
-              <InputText placeholder="Last Name" />
+              <input
+                ref={contactLastName}
+                placeholder="Last Name"
+                className="bg-primary md:border-b-2 border-b-[1px] border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
+              />
             </div>
           </div>
           <div className="text-white font-normal mt-5">
-            <InputText placeholder="Email" />
+            <input
+              ref={contactEmail}
+              placeholder="Your Email"
+              className="bg-primary md:border-b-2 border-b-[1px] border-black placeholder:text-placeholder md:placeholder:px-3 placeholder:px-1 w-full align-text-top"
+            />
           </div>
           <div className="text-white font-normal mt-5">
-            <MessageInput placeholder="Message" rows={4} />
+            <textarea
+              ref={contactMessage}
+              className="bg-primary md:border-b-2 border-b-[1px] border-black placeholder:text-placeholder placeholder:px-3 w-full align-text-top"
+              placeholder="Message"
+              rows={4}
+            ></textarea>
           </div>
 
           <div className="flex justify-end md:mt-14 mt-10">
-            <div className="w-sendbutton text-buttontext">
+            <div className="w-sendbutton text-buttontext" onClick={sendMessage}>
               <Button title="Send" />
             </div>
           </div>
