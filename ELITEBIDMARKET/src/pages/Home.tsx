@@ -12,7 +12,7 @@ import {
   Button,
   Footer,
 } from "../components";
-// import { lamborghini, contact_us_icon } from "../assets";
+import { blockbuster } from "../assets";
 import "./home.css";
 import { Link } from "react-router-dom";
 interface Car {
@@ -75,11 +75,15 @@ const Home = () => {
     return date.getTime() < now.getTime();
   };
 
-  const handleStartBiddingButton = () => {
-    console.log("Bidding Button");
-  };
   return (
     <div className="flex flex-col">
+      <div className="w-full xl:pl-10 pl-5 bg-primary">
+        <img
+          src={blockbuster}
+          alt="powered by blockbuster"
+          className="sm:absolute ss:w-[100px] w-[50px]"
+        />
+      </div>
       {/* hero section */}
       <div className="hidden md:flex items-center justify-center bg-primary">
         <div className="flex flex-col p-10 w-2/4 items-center justify-center">
@@ -106,7 +110,7 @@ const Home = () => {
       {/* hero section Mobile Version */}
       <div className="flex md:hidden flex-col items-center justify-center bg-primary">
         <div className="flex flex-col px-vertical items-center justify-center">
-          <div className="font-bold text-title pt-vertical max-w-[35rem]">
+          <div className="font-bold text-title sm:pt-vertical max-w-[35rem]">
             {hero_section.title}
           </div>
           <div className="flex items-center justify-center">
