@@ -91,6 +91,7 @@ const Home = () => {
       contactLastName.current.value = "";
       contactEmail.current.value = "";
       contactMessage.current.value = "";
+      alert("Message Sent. We'll reply to you as soon as possible");
     } else {
       alert("Please fill out all the requried fields to contact us.");
     }
