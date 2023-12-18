@@ -1,125 +1,156 @@
-import React, { useState, useEffect, useRef } from "react"
-import { Footer, CountdownTimer } from "../components"
-import { verified_icon } from "../assets"
-import { useParams } from "react-router-dom"
+import React, { useState, useEffect, useRef } from "react";
+import { Footer, CountdownTimer } from "../components";
+import { verified_icon } from "../assets";
+import { useParams } from "react-router-dom";
+import { LoadingSpinner } from "../components";
 
-import { getCurrentDateTime, deletePost } from "../Helper"
+import { getCurrentDateTime, deletePost, postBid } from "../Helper";
 
 interface Car {
-  id: number
-  name: string
-  features: string
-  description: string
-  posted_by: string
-  imageURL: string
-  endTime: string
-  username: string
-  num_of_bids: string
-  last_bidder_name: string
-  last_bidding_amount: string
-  minBidPrice: string
+  id: number;
+  name: string;
+  features: string;
+  description: string;
+  posted_by: string;
+  imageURL: string;
+  endTime: string;
+  username: string;
+  num_of_bids: string;
+  last_bidder_name: string;
+  last_bidding_amount: string;
+  minBidPrice: string;
 }
 
 interface PostBidInterface {
-  amount: Number
-  timestamp: string
-  carID: Number
+  amount: Number;
+  timestamp: string;
+  carID: Number;
 }
 
 const ListingDetails = () => {
-  const newBid = useRef<HTMLInputElement>(null)
+  const newBid = useRef<HTMLInputElement>(null);
 
-  const { id } = useParams()
-  const [car, setCar] = useState<Car>()
-  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false)
-  const [auctionExpired, setAuctionExpired] = useState(false)
-  const [userIsTheOwner, setUserIsTheOwner] = useState(false)
+  const { id } = useParams();
+  const [car, setCar] = useState<Car>();
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const [auctionExpired, setAuctionExpired] = useState(false);
+  const [userIsTheOwner, setUserIsTheOwner] = useState(false);
+  const [isBidLessThanMinBid, setIsBidLessThanMinBid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     if (localStorage.getItem("user-token")) {
-      console.log("User is logged in")
-      setUserIsLoggedIn(true)
+      console.log("User is logged in");
+      setUserIsLoggedIn(true);
     }
 
-    const ALL_CARS = import.meta.env.VITE_ALL_CARS
+    const ALL_CARS = import.meta.env.VITE_ALL_CARS;
     fetch(ALL_CARS)
       .then((response) => response.json())
       .then((auctions) => {
-        console.log(auctions)
+        console.log(auctions);
 
         const selectedCar: Car = auctions.find(
           (car: Car) => car.id === Number(id)
-        )
-        console.log("Printing the complete object:")
-        console.log(selectedCar)
-        console.log(selectedCar?.last_bidding_amount)
-        setCar(selectedCar)
+        );
+        console.log("Printing the complete object:");
+        console.log(selectedCar);
+        console.log(selectedCar?.last_bidding_amount);
+        setCar(selectedCar);
 
         if (selectedCar.username == localStorage.getItem("user-email")) {
-          setUserIsTheOwner(true)
+          setUserIsTheOwner(true);
         }
 
-        const now = new Date()
-        const end = new Date(selectedCar.endTime)
-        const timeDifference = end.getTime() - now.getTime()
+        const now = new Date();
+        const end = new Date(selectedCar.endTime);
+        const timeDifference = end.getTime() - now.getTime();
 
         if (timeDifference <= 0) {
-          setAuctionExpired(true)
+          setAuctionExpired(true);
         }
-      })
-  }, [])
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      console.log("Enter key pressed")
-      postBidFunction()
+      console.log("Enter key pressed");
+      if (car?.last_bidder_name) {
+        if (
+          Number(newBid.current?.value) <
+          Number(car?.last_bidding_amount) + 100
+        ) {
+          setIsBidLessThanMinBid(true);
+        } else {
+          setIsBidLessThanMinBid(false);
+          postBidFunction();
+        }
+      } else {
+        if (Number(newBid.current?.value) < Number(car?.minBidPrice)) {
+          setIsBidLessThanMinBid(true);
+        } else {
+          setIsBidLessThanMinBid(false);
+          postBidFunction();
+        }
+      }
     }
-  }
+  };
+
+  const handleInputChnage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const numericValue = event.target.value.replace(/[^0-9]/g, "");
+    if (newBid.current !== null) {
+      newBid.current.value = numericValue;
+    }
+  };
 
   const deleteCar = () => {
+    setIsLoading(true);
     if (id != undefined) {
-      deletePost(id?.toString())
+      deletePost(id?.toString());
+      setIsLoading(false);
     }
-  }
+  };
   const postBidFunction = () => {
-    const currentTimestamp = getCurrentDateTime()
+    const currentTimestamp = getCurrentDateTime();
 
     const BidInfo: PostBidInterface = {
       amount: newBid?.current?.value ? Number(newBid.current.value) : 0,
       timestamp: currentTimestamp.toString(),
       carID: Number(id),
-    }
-    console.log("Printing Bid Info")
-    console.log(BidInfo)
-    console.log("---------------------")
-    // const response = postBid(BidInfo)
-  }
+    };
+    console.log("Printing Bid Info");
+    console.log(BidInfo);
+    postBid(BidInfo);
+  };
   return (
-    <div className='bg-primary flex flex-col gap-5 h-full'>
-      <div className='flex md:flex-row flex-col w-full md:gap-5 md:p-10 p-5 md:mt-0 mt-2'>
+    <div className="bg-primary flex flex-col gap-5 h-full">
+      {isLoading && <LoadingSpinner />}
+      <div className="flex md:flex-row flex-col w-full md:gap-5 md:p-10 p-5 md:mt-0 mt-2">
         {/* Top Left Section */}
-        <div className='flex w-full rounded-lg'>
+        <div className="flex w-full rounded-lg">
           <img
             src={car?.imageURL}
-            alt='car image'
-            className='rounded-lg object-cover'
+            alt="car image"
+            className="rounded-lg object-cover"
           />
         </div>
 
         {/* Top Right Section */}
-        <div className='flex flex-col w-full md:m-0 mt-5 text-medium font-semibold'>
-          <div className='text-subtitle font-bold'>{car?.name}</div>
-          <div className='flex text-medium text-gray font-semibold gap-2 items-center'>
+        <div className="flex flex-col w-full md:m-0 mt-5 text-medium font-semibold">
+          <div className="text-subtitle font-bold">{car?.name}</div>
+          <div className="flex text-medium text-gray font-semibold gap-2 items-center">
             <div>{car?.posted_by}</div>
             <div>
               <img
                 src={verified_icon}
-                alt='verification icon'
-                className='max-w-[30px] object-contain'
+                alt="verification icon"
+                className="max-w-[30px] object-contain"
               />
             </div>
           </div>
-          <div className='mt-5'>
+          <div className="mt-5">
             Current Bid: $
             {car?.last_bidding_amount
               ? car?.last_bidding_amount
@@ -127,11 +158,11 @@ const ListingDetails = () => {
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               : car?.minBidPrice}
           </div>
-          <div className='mt-1 flex'>
+          <div className="mt-1 flex">
             Time Left:&nbsp;
             {car?.endTime && <CountdownTimer endTime={car.endTime} />}
           </div>
-          <div className='mt-1'>
+          <div className="mt-1">
             Min Next Bid:{" "}
             {car?.last_bidding_amount
               ? (Number(car?.last_bidding_amount) + 100)
@@ -141,20 +172,29 @@ const ListingDetails = () => {
                   .toString()
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
           </div>
-          <div className='my-10 flex items-center gap-3'>
-            <div>Enter your Bid: </div>
-            <div className='w-detailInputText rounded-lg'>
+          <div className="my-10 flex items-center gap-3">
+            <div className="">Enter your Bid: </div>
+            <div className="w-detailInputText rounded-lg ">
               <input
                 onKeyDown={handleKeyPress}
+                onChange={handleInputChnage}
                 ref={newBid}
                 disabled={!userIsLoggedIn || auctionExpired}
-                placeholder='Enter Your bid'
-                className='bg-white placeholder:text-placeholder rounded-lg h-[50px] md:placeholder:px-3 placeholder:px-1 w-full align-text-top'
+                placeholder="Enter Your bid"
+                className={`bg-white placeholder:text-placeholder rounded-lg h-[50px] md:placeholder:px-3 placeholder:px-1 w-full align-text-top ${
+                  isBidLessThanMinBid ? "text-red" : ""
+                }`}
               />
+              <div className=" xs:text-sm text-xs">
+                {!userIsLoggedIn
+                  ? "Please sign in to participate in the auction."
+                  : "Press enter to submit your bid"}
+              </div>
             </div>
           </div>
-          <div className='font-normal'>
-            <span className='font-bold'>
+
+          <div className="font-normal">
+            <span className="font-bold">
               {car?.last_bidder_name ? car?.last_bidder_name : "No one"}
             </span>{" "}
             is currently winning this bid
@@ -162,9 +202,9 @@ const ListingDetails = () => {
 
           {/* Delete Button */}
           {userIsTheOwner ? (
-            <div className='mt-10 w-deleteButton'>
+            <div className="mt-10 w-deleteButton">
               <div
-                className='bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer'
+                className="bg-red text-white hover:bg-lightred text-center text-medium font-bold md:px-button py-3 rounded-xl cursor-pointer"
                 onClick={deleteCar}
               >
                 Delete Post
@@ -177,26 +217,26 @@ const ListingDetails = () => {
       </div>
 
       {/* Features and Description */}
-      <div className='flex md:flex-row flex-col text-medium md:mt-0 mt-5 md:p-10 p-5 '>
-        <div className='flex flex-col w-full'>
-          <div className='font-bold'>Key Features:</div>
-          <div className='font-semibold mt-5'>
+      <div className="flex md:flex-row flex-col text-medium md:mt-0 mt-5 md:p-10 p-5 ">
+        <div className="flex flex-col w-full">
+          <div className="font-bold">Key Features:</div>
+          <div className="font-semibold mt-5">
             {car?.features.split("\n").map((line) => (
               <p key={line}>{line}</p>
             ))}
           </div>
         </div>
-        <div className='flex flex-col w-full md:mt-0 mt-5'>
-          <div className='font-bold'>Description:</div>
-          <div className='font-semibold mt-5'>{car?.description}</div>
+        <div className="flex flex-col w-full md:mt-0 mt-5">
+          <div className="font-bold">Description:</div>
+          <div className="font-semibold mt-5">{car?.description}</div>
         </div>
       </div>
 
-      <div className='mt-40'>
+      <div className="mt-40">
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ListingDetails
+export default ListingDetails;

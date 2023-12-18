@@ -1,126 +1,131 @@
-import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
-import { Listing, Footer, Filter } from "../components"
-import { filter_icon } from "../assets"
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Listing, Footer, Filter } from "../components";
+import { filter_icon } from "../assets";
+import { LoadingSpinner } from "../components";
 
 interface Car {
-  id: number
-  name: string
-  features: string
-  description: string
-  posted_by: string
-  imageURL: string
-  endTime: string
-  username: string
-  num_of_bids: string
-  last_bidder_name: string
-  last_bidding_amount: string
-  minBidPrice: string
+  id: number;
+  name: string;
+  features: string;
+  description: string;
+  posted_by: string;
+  imageURL: string;
+  endTime: string;
+  username: string;
+  num_of_bids: string;
+  last_bidder_name: string;
+  last_bidding_amount: string;
+  minBidPrice: string;
 }
 
 const Buy = () => {
-  const [allAvailableCars, setAllAvailableCars] = useState<Car[]>([])
-  const [sortOption, setSortOption] = useState("")
+  const [allAvailableCars, setAllAvailableCars] = useState<Car[]>([]);
+  const [sortOption, setSortOption] = useState("");
 
-  const location = useLocation()
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const searchQuery =
-      new URLSearchParams(window.location.search).get("search") || ""
-    console.log("Search Query:", searchQuery)
-    const ALL_CARS = import.meta.env.VITE_ALL_CARS
+      new URLSearchParams(window.location.search).get("search") || "";
+    console.log("Search Query:", searchQuery);
+    const ALL_CARS = import.meta.env.VITE_ALL_CARS;
+    setIsLoading(true);
     fetch(`${ALL_CARS}?search=${encodeURIComponent(searchQuery)}`)
       .then((response) => response.json())
       .then((cars) => {
-        console.log("api called")
-        console.log(cars)
+        console.log("api called");
+        console.log(cars);
 
         const filteredCars = searchQuery
           ? cars.filter((car: Car) =>
               car.name.toLowerCase().includes(searchQuery.toLowerCase())
             )
-          : cars
+          : cars;
 
         // Separate sold items (max 10)
         const soldCars: Car[] = filteredCars.filter((car: Car) =>
           isCarSold(car.endTime)
-        )
+        );
 
         // Remove sold cars
         const updatedAllCars = filteredCars.filter(
           (car: Car) => !soldCars.some((soldCar) => soldCar.id === car.id)
-        )
+        );
 
-        setAllAvailableCars(updatedAllCars)
-      })
-  }, [location.search])
+        setAllAvailableCars(updatedAllCars);
+        setIsLoading(false);
+      });
+  }, [location.search]);
 
   const isCarSold = (dateString: string): boolean => {
-    const date = new Date(dateString)
-    const now = new Date()
+    const date = new Date(dateString);
+    const now = new Date();
 
-    return date.getTime() < now.getTime()
-  }
+    return date.getTime() < now.getTime();
+  };
 
   const handleSortChange = (selectedSort: string) => {
-    setSortOption(selectedSort)
-  }
+    setSortOption(selectedSort);
+  };
 
   useEffect(() => {
-    let sortedCars = [...allAvailableCars]
+    let sortedCars = [...allAvailableCars];
 
     switch (sortOption) {
       case "A-Z":
         sortedCars.sort((a, b) => {
-          const nameA = a.name.trim().replace(/^\d+\s*/, "") // Remove leading numbers
-          const nameB = b.name.trim().replace(/^\d+\s*/, "") // Remove leading numbers
-          return nameA.localeCompare(nameB)
-        })
-        break
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameA.localeCompare(nameB);
+        });
+        break;
       case "Z-A":
         sortedCars.sort((a, b) => {
-          const nameA = a.name.trim().replace(/^\d+\s*/, "") // Remove leading numbers
-          const nameB = b.name.trim().replace(/^\d+\s*/, "") // Remove leading numbers
-          return nameB.localeCompare(nameA)
-        })
-        break
+          const nameA = a.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          const nameB = b.name.trim().replace(/^\d+\s*/, ""); // Remove leading numbers
+          return nameB.localeCompare(nameA);
+        });
+        break;
       case "LowestPrice":
         sortedCars.sort(
           (a, b) =>
             parseFloat(a.last_bidding_amount) -
             parseFloat(b.last_bidding_amount)
-        )
-        break
+        );
+        break;
       case "HighestPrice":
         sortedCars.sort(
           (a, b) =>
             parseFloat(b.last_bidding_amount) -
             parseFloat(a.last_bidding_amount)
-        )
-        break
+        );
+        break;
       default:
         // No sorting
-        break
+        break;
     }
 
-    setAllAvailableCars(sortedCars)
-  }, [sortOption, allAvailableCars])
+    setAllAvailableCars(sortedCars);
+  }, [sortOption, allAvailableCars]);
 
   return (
     <div>
-      <div className='flex md:m-10 m-5 gap-2'>
+      {isLoading && <LoadingSpinner />}
+      <div className="flex md:m-10 m-5 gap-2">
         <img
           src={filter_icon}
-          alt='filter icon'
-          className='w-[35px] object-contain'
+          alt="filter icon"
+          className="w-[35px] object-contain"
         />
         <Filter onSortChange={handleSortChange} />
       </div>
-      <div className='flex flex-wrap xs:justify-start justify-center md:my-10 my-5 md:mx-10 mx-5 gap-10'>
+      <div className="flex flex-wrap xs:justify-start justify-center md:my-10 my-5 md:mx-10 mx-5 gap-10">
         {allAvailableCars.map((car) => (
           <div
             key={car.id}
-            className='min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg'
+            className="min-w-listingxs md:min-w-listingmd lg:min-w-listinglg max-w-listingxs md:max-w-listingmd lg:max-w-listinglg"
           >
             <Listing
               id={car.id}
@@ -142,7 +147,7 @@ const Buy = () => {
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Buy
+export default Buy;

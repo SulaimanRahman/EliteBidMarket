@@ -86,6 +86,7 @@ module.exports = {
         //SignIn Page
         signInInputText: "clamp(200px, 100%, 550px)",
         signInPad: "clamp(200px, 100%, 600px)",
+        signUpPad: "clamp(200px, 100%, 800px)",
         
         
       },
